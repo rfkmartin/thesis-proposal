@@ -1,0 +1,110 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{amsfonts}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{sectsty}
+\usepackage{subfig}
+\graphicspath{{../../../figures/},{../../../images/}}
+
+%\textwidth6in
+
+%\sectionfont{\fontsize{12}{15}\selectfont}
+
+%\setlength{\topmargin}{0in} \addtolength{\topmargin}{-\headheight}
+%\addtolength{\topmargin}{-\headsep}
+
+\pagestyle{fancy}\lhead{Robert F.K. Martin Thesis Proposal} \rhead{May 2018}
+\chead{{\large{\bf }}} \lfoot{} \rfoot{} \cfoot{\thepage}
+
+\newcounter{list}
+
+\begin{document}
+\bibliographystyle{IEEEtranS}
+%\bibliographystyle{hunsrt}
+\newpage
+\thispagestyle{empty}
+\pagenumbering{gobble}
+%\begin{spacing}{1}
+\begin{center}
+\vspace{\stretch{2}}
+\textbf{VISUAL MONITORING OF SUBTLE HUMAN MOTION}\\
+\vspace{\stretch{1}}
+Ph.D. Thesis Proposal\\
+\bigskip
+Robert Francis Kennedy Martin\\
+\end{center}
+%\end{spacing}
+\clearpage
+\pagenumbering{arabic}
+\section{Abstract}
+\noindent
+Observation plays a key role in the assessment of medical patients. From the initial visit to a follow-up examination, a doctor’s visual inspection is as important as any diagnostic test. However, there are many illnesses that can only be diagnosed through observation, especially in the psychiatric domain. As such, these observations can be less reliable due to human error, subjective measurement, or loss of memory. With the availability of cheap cameras, many of these observations are now being recorded. But due to the time-intensive nature of video analysis, the full potential is most of these videos has not been realized. With recent advances in computer vision, many videos can now be analyzed to look for descriptive behaviors that indicate certain pathologies. By having these videos automatically processed, not only can they be used for initial diagnosis, but for evaluating the efficacy of therapeutic solutions as well. This thesis will introduce techniques to observe certain behaviors that can be used to quantify behaviors towards the goal of identifying certain psychiatric conditions\textbf{STILTED}.
+\section{Introduction}
+\noindent
+One of the first ad most important steps in a physical examimation is inspection. This is a crucial piece of the initial doctor/patient interaction as it gives important clues to the initial diagnosis and provides a starting point for further investigation and questions. Additionally, initial observations can be used as a baseline for follow-up interactions. Visual inspections are an important part of many psychiatric examination, where the disorder is typically manifests itself in atypical behavior. Among the many psychiatric disorders that fall into this category, some of the more well-known are attention-deficit hyperactivity disorder, obsessive-compulsive disorder, Tourette's syndrome, depression, and post-traumatic stress disorder, among others.
+
+Human observation is inherently imperfect and subject to many sources of error. Confirmation bias can lead to many observations either being missed or ignored. Alarm fatigue, where the observer is unundated with signals, can also be a source of error. Observations are a very subjective type of measurement and can differ from observer to observer. For this reason, cameras and computers have been utilized to augment or replace a human observer.
+
+Because of the low cost of cameras and data storage, video is being used to assist with medical observations. Many doctor/patient interactions are now recorded and can be rewatched for more careful analysis. However, the time required to analyze a video outweighs the benefits of the analysis. Even in a research context, annotation of videos is often too time-consuming to be useful\cite{fasching2016} \cite{walkup1992}.
+
+As processing power gets faster and cheaper, computer vision has been applied to fields as diverse as traffic monitoring\cite{Gupte}, security surveillance\cite{bird2006}, manufacturing\cite{saurez2018}, and autonomous vehcles. There are many advantages to using computers. Computers are fast, cheap, consistent, and don't suffer from fatigue, erasing most of the defects of human observers.
+
+There has been some early work in using cameras to assist in the medical domain, using cameras to assist in the observation of OCD, Tourette's, and schizophrenia. \textbf{NEED MORE} This thesis will extend that work into observing and quantifying subtle human behaviors for disorder discrimination.
+
+\section{Literature Review}
+\subsection{Activity Recognition}
+Understanding what activity a subject is engaging in is a precursor to being able to observe possible risk markers. Activity recognition is an active field of research and has decades of publications. With improvements in camera pixel resolution and processing speed, techniques have become more complex. Activity recognition is generally a two-step process: segment the subject from the video, then classify the activity.
+
+The classic mode of subject segmentation is background subtraction\cite{brutzer2011}. Given a good background model, we can get either a silhouette or contour of the subject. Taking a series of these gives us a space-time volume, whose shape can be used to determin an activity. However, background subtraction is an imperfect process due to the difficulties of background modeling. Optical flow can also be used to gather motion information of the subject but also suffer from noisy backgrounds.
+
+Another popular method is to find local interest points. Local representations are somewhat viewpoint invariant and handle occlusion better than background subtraction. Laptev\cite{laptev2003} extends the Harris corner detector to 3D to find points of interest in space-time. Castrodad\cite{castrodad2012} uses temporal differencing and thresholding to find regions of particular interest in video sequences. A more detailed summary of recent methods can be found in \cite{poppe2010} and \cite{aggarwal2011}. Or rather than treating a video as a space-time construct, features can be tracked in individual frames and assembled to create feature vectors in time. Recent work\cite{ciptadi2014} has encoded activity as a motion pattern histogram for efficient retrieval.
+
+In the case of space-time volumes, the segmented shape is compared to a set of activity templates to match an activity. Similary, a set of optical flow vectors representing an object can be matched to a set of activity models constructed from training data. For features vectors, probabilistic methods are used to calculate a posterior probability that a given sequence was generated by some training model.
+
+\subsection{Subtle Human Motion}
+We define subtle motions to be synonomous to gestures. Gestures are elementary movements of a body part as opposed to actions which are comprised of one or more gestures. Whereas the previous section discussed activities which typically involved an entire body, here we focus on a single body part, such as a hand, head, or facial feature such as the lips or eyes.
+
+Gestures have many applications beyond activity recognition. They play a large part in human-computer interaction. One of the first applications\cite{bradski98} applied the CAMSHIFT algorithm to recognize and track head movements which were used to control a flight simulator in lieu of a mouse. The limitations of the system due to the simplicity of the algorithm limited its application but proved the field to be worth of further research. One drawback of the \cite{bradski98} was that it only searched for a head-shaped, skin-colored object. Improvements have been made to look explicitly for faces and there has been an active body of research into face recognition as in \cite{cech2014} and \cite{viola2004}.
+
+Individual parts of the face have been used to recognize gestures as well. Eyes have been used to detect blinks and gaze direction for driver awareness and again for human-computer interaction. Chau\cite{chau2005} explicitly found the eyes using blinks and then trained the system to distinguish between voluntary and involuntary blinks. In \cite{soukupova2016}, facial landmarks were used to detect the eyes and in real-time determine blinks. Eyebrows(?) and emotions(?)\cite{nguyen2017}
+\begin{itemize}
+  \item \cite{kolsch2004} hand detection
+  \item \cite{cao2016} OpenPose
+\end{itemize}
+\subsection{Psychopathology}
+Mental illnesses are typcially diagnosed through observable symptoms or behaviors. Observations are one part of an multi-part assesment, which sometimes include interviews and self-reports. Because observations can be made anywhere, they are typically less intrusive than in-clinic setting. If observations can be made in a consistent and quantifiable way, then they are a valubable source of diagnostic information. Observable risk-markers have been compiled for several mental disorders such as depression, obsessive-compulsive disorder, Tourette's syndrome, and anxiety, among many others.
+
+For obsessive-compulsive disorder(OCD), it is typically measured through the Children’s Yale-Brown Obsessive Compulsive Scale (CY-BOCS) checklist. The disorder manifests itself in repeated, persistent and unwanted thoughts, urges or images that are intrusive and cause distress or anxiety. Some of these urges are observable compulsions, such as ordering or arranging objects in specific ways\cite{radomsky2004}. Another classic manifestation of OCD is excessive and meticulous hand washing. Many of these behaviors exist in the general population and clinicians need to differentiate between the two.  Results in \cite{zor2011} found that  video analysis can be used to discriminate between different compulsions. Other research\cite{bernstein2017} has found that video is a valid and reliable method for quantifying risk-markers.
+
+Depression is another common mental disorder which was observable behavior manifestations. Scherer\cite{scherer2014} has found that depressed individuals, as well as those suffering from post-traumatic stress(PTSD), have quantifiable gaze behaviors. In addition to gaze, facial expressions, specifically smiles, were found to be a good metric for discerning mental health.
+
+Tourette syndrome(TS) is a neurological disorder with childhood onset characterized by a large spectrum of motor and phonic tics. Estimates are that approximately 1\% of school-age children suffer from TS with 20\% unaware of their tics. TS is currently diagnosed by clinic observation and rated according to the Yale Global Tic Severity Scale(YGTSS). Direct, or even video, observation has been found to be reliable\cite{walkup1992} but labor-intensive and impractical for clinical use. In \cite{bernabei2010}, efforts were made to remove the subjectivity of visual measurement and use  body-mounted accelerometers to quantify tic activity. They found that although this method reduced the evaluation time, there was limited use in that the placement of the accelerometers were not able to detect facial tics and only limited detection of larger motor tics.
+
+A common theme in these works is an acknowledgment that motor stereotypies still have a very elastic definition but that their presence as an observed behavior warrants further investigation in the context of understanding their link with neurological disorders. The visually observable risk-markers and symptoms discussed here only represent a portion of what can be observed and viable as a tool in psychiatric assessment. In all of the work discussed in this subsection, the visual observations were recorded manually. The following subsection discusses automatic approaches via computer vision.
+
+\section{Initial Work}
+\subsection{Introduction}
+\subsection{Related Work}
+\subsection{Proposed Plan}
+
+\section{Proposed Work}
+\subsection{Introduction}
+\subsection{Contributions}
+
+\section{Timeline}
+A proposed timeline for the project, with a finishing data of Fall 2020, is the following:
+\begin{itemize}
+  \item June 2018 - December 2018:
+  \item January 2019 - June 2019:
+  \item July 2019 - January 2020:
+  \item February 2020 - October 2020
+\end{itemize}
+
+
+%\bibliographystyle{../hunsrt}
+\bibliography{thesis}
+\end{document}
