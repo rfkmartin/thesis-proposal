@@ -201,30 +201,30 @@ Face feature tracking is noisy and small invidual variates in even one facial fe
 
 \section{Proposed Work}
 \subsection{Increase the data set of tic videos}
-We are motivated us to start this thesis was the future applicability of the technology. We believe that being able to quantify and differentiate tic behaviors has great potential for everyday use for people suffering from TS. Not only will clinicians and researchers be able to make full use in less time of any video data, but patients will get immediate feedback on any tic suppression exercises.
+What motivated us to start this thesis was the future applicability of the technology. Being able to quantify and differentiate tic behaviors has great potential for everyday use for people suffering from TS. Not only might clinicians and researchers make fuller use in less time of video data, but patients could get immediate feedback on any tic suppression exercises.
 
-Currently we have a handful of videos featuring normative subjects. For conditions in which we seek to discriminate between normal and pathological behaviors, we lack true data. At times, the subjects behaved in a way as to mimic a certain pathology. While it may have generated the appearance of real results, it does not capture the full range and nuance of the behavior. In particular, when we ask a subject to appear to tic, their action is voluntary and may not capture some of the true subtleties we may see in a true tic.
+Currently we have a handful of videos featuring normative subjects. For conditions in which we seek to discriminate between normal and pathological behaviors, we lack true data. At times, the subjects were asked to mimic a certain pathology. While it may have generated the appearance of real results, it does not capture the full range and nuance of the behavior. In particular, when we ask a subject to appear to tic, their action is voluntary and may not capture all of the true tic's subtleties.
 
 One of the goals of this work is to build discriminative tools for certain risk-factors. In order to maximize the potential utility of this tool and avoid overfitting, we need to gather video that is more representative of the general population.
 
 For facial tics, we are partnering with Dr. Christine Conelea of the Department of Psychiatry to collect video from both the normative populations and from those who have been identified as suffering from tics. We hope this richer data set will provide the information needed to find discriminative models of tic behavior.
 
-Additional videos will be made of the arranging task under a variety of conditions using a larger set of subjects, hopefully some who exhibit ordering compulsion. These videos will be shot under a wider range of conditions and environments to produce a more robust tracker.
+Additional videos will be made of the arranging task under a variety of conditions using a larger set of subjects, hopefully including some who exhibit ordering compulsions. These videos will be shot under a wide range of conditions and environments so as to produce a more robust tracker.
 
-We will also take advantage of already recorded video from prior research into obsessive-compulsive disorder. This videos show dyadic behavior(discussed in 5.4) which should provide for the possiblity of finding new metrics that involve more than one subject.
+We will also take advantage of already recorded video from prior research into obsessive-compulsive disorder. These videos show dyadic behavior(discussed in 5.4) which should provide for the possiblity of finding new metrics that involve more than one subject.
 \subsection{Scene complexity}
-Another primary goal of this work is to produce a system which can not only be used in controlled clinical settings, but also in any uncontrolled context. The real power of a system like this would be seen when it is in the hands of the patient as well as the clinician. If a patient can self-quantify his behavior, he can monitor his progress outside the clinic environment. Additionally, allowing for a simple environment for testing will open this up to more potential users.
+Another primary goal of this work is to produce a system which can be used in non-controlled, non-clinical settings. The real power of a system like this would be seen when it is in the hands of an unsupervized patient. If a patient can self-quantify his behavior, he can monitor his progress outside the clinic environment. Additionally, this should open such testing to more potential users.
 
 Our initial tests in the arranging task consisted of a single top-down view. This was done as it provided the easiest initial setup for tracking. Additionally, the objects used for arranging were solid color objects on a white background. As we progress in our testing, we will add more complexity in this order.
 \begin{itemize}
 	\item{Multi-colored objects or objects of similar color -- we will try to make a robust tracker that can handle objects that have more varied color profiles. This wrinkle will test the robustness of tracking under occlusion.}
-	\item{Varied backgrounds -- Not everyone will have access to a plain white table surface. After our tracker can handle differently-colored objects, we will alter the background to a) a darker, colored background and b) a checkered tablecloth pattern.}
+	\item{Varied backgrounds -- Not everyone will have access to a plain white table surface. After our tracker can handle differently-colored objects, we will alter the background to (a) a darker, colored background and (b) a checkered tablecloth pattern.}
 	\item{Other viewpoints -- A top-down viewpoint reduces the dimensionality of the scene from 3D to 2D. We will attempt to analyze the arranging task from a 3/4 viewpoint to see if can handle occlusions from a different angle as well as motion that is not necessarily planar. Special attention will be paid to camera calibration in this section to make sure we can accurately detect circles from an arbitrary view as well as detemine object spacing in the final arrangement.}
 \end{itemize}
 \subsection{Hidden Markov models and Recurrent Neural Networks}
-We have collected several facial features to  describe tic-like behavior but are analyzing them individually. It is more likely that these features are related and perhaps even weakly correlated. It would make sense to investigate them as a vector of features instead.
+We have identified several facial features to  describe tic-like behavior but are so far analyzing them individually. It is more likely that these features are related and perhaps even weakly correlated. It would make sense to investigate them as a vector of features instead.
 
-Hidden Markov models(HMM) and recurrent neural networks(RNN) have been used for activity recognition given some reduced space representation of a scene. HMMs output a sequence of labels given a sequence of observations. Using the facial features described previously as out observations, we can train a network to predict if a subject is experiencing a tic. Similarly, RNNs also create a sequence of output states given a sequence of observations with the difference being RNNs take into more than just the current observation. RNNs have shown to be better at language modeling than HMMs so we hope that we find similar results here.
+Hidden Markov models(HMM) and recurrent neural networks(RNN) have been used for activity recognition given some reduced space representation of a scene. HMMs output a sequence of labels given a sequence of observations. Using the facial features described previously as our observations, we can train a network to predict if a subject is experiencing a tic. Similarly, RNNs also create a sequence of output states given a sequence of observations, with the difference being RNNs take into account more than just the current observation. RNNs have shown to be better at language modeling than HMMs so we hope that we find similar improvements here.
 
 Both methods are trained using a ground-truthed data set. In order to train either of these methods, we will need a larger selection of videos displaying tic and non-tic behavior.
 
@@ -240,10 +240,10 @@ Tracking two subjects adds another layer to complexity to an already difficult p
     \label{dyadic}%
 \end{figure}
 
-We will collect several videos of the arrangement task using multiple combinations of two subjects. Because of the potential difficulty of this we will limit ourselves to our initial setup of a top-down view and simple white background and remove the spacing metric. An example screenshot if shown in \ref{dyadic}.
+We will collect several videos of the arrangement task using multiple combinations of two subjects. Because of the potential difficulty of this we will limit ourselves to our initial setup of a top-down view and simple white background and remove the spacing metric. An example screenshot is shown in figure \ref{dyadic}.
 \section{Contributions}
 \subsection{Computer vision applications to medical observation}
-Computer vision has been applied to many medical applications. Among the first applications was the anaylsis of medical images. Image processing has been used to detect various cancers, segment an image by tissue types, and detecting and counting white blood cells. This is an active area of research as there are still many medical images that are process manually.
+Computer vision has been applied to many medical applications. Among the first applications was the analysis of medical images. Image processing has been used to detect various cancers, segment an image by tissue types, and detecting and counting white blood cells. This is an active area of research as there are still many medical images that are process manually.
 
 Video streams have also been using in a medical context either in assisting during a procedure or in post-procedure analysis. Early work in gait recognition has been applied to the recognition of early signals of Parkinson's disease and dementia. There has been some work in the field to recognize certain behaviors to may indicate a psychiatric disorder. This thesis will explore the detection of new, subtle actions that can be quantified to assist in the evaluation of these disorders.
 
