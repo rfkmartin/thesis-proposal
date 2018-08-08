@@ -1,0 +1,403 @@
+\documentclass{beamer}
+\mode<presentation>
+
+%Removes some warnings
+\let\Tiny=\tiny
+
+\usepackage{multicol}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{textpos}
+\usepackage{graphicx}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+
+\usetheme{Darmstadt}
+
+%% http://www.math.umbc.edu/~rouben/beamer/
+
+%Additional theme/color changes
+%\definecolor{umn_maroon}{rgb}{0.48,0,0.01}
+\definecolor{umn_maroon}{rgb}{0.39,0,0.08}
+\definecolor{umn_maroon_dark}{rgb}{1,0.2,0.13}
+\definecolor{umn_gold}{rgb}{1,0.8,0.2}
+
+%Title Page
+\setbeamercolor{titlelike}{bg=umn_maroon,fg=umn_gold}
+\setbeamercolor{section in toc}{fg=umn_maroon}
+
+%Frame headers
+\setbeamercolor{section in head/foot}{fg=umn_gold}
+\setbeamercolor{subsection in head/foot}{bg=umn_gold}
+\setbeamercolor{subsection in head/foot}{fg=umn_gold}
+\setbeamercolor{navigation symbols}{fg=umn_maroon,bg=umn_maroon_dark}
+\setbeamercolor{frametitle}{bg=umn_maroon}
+\setbeamercolor{frametitle}{fg=umn_gold}
+
+%Itemize/Enumerates
+\setbeamercolor{item}{fg=umn_maroon}
+
+%
+\setbeamercolor{caption}{{fg=black}}
+\setbeamercolor{caption name}{{fg=black}}
+
+\setbeamerfont{caption}{size=\tiny}
+
+\setbeamertemplate{navigation symbols}{}
+
+\addtobeamertemplate{frametitle}{}
+{%
+  \begin{textblock*}{100mm}(0.76\textwidth,-0.6cm)
+    \includegraphics[height=0.35cm,width=3.45cm]{diagrams/template_graphics/goldWMlong.png}
+  \end{textblock*}
+}
+
+% For every picture that defines or uses external nodes, you'll have to
+% apply the 'remember picture' style. To avoid some typing, we'll apply
+% the style to all pictures.
+\tikzstyle{every picture}+=[remember picture]
+
+% By default all math in TikZ nodes are set in inline mode. Change this to
+% displaystyle so that we don't get small fractions.
+\everymath{\displaystyle}
+
+
+% Remove "Fig." from figure captions
+\renewcommand{\figurename}{}
+\renewcommand{\subfigurename}{}
+
+
+\title[]{Interactive Image Segmentation Using Texture}
+\author{Robert F.K. Martin}
+\institute{Department of Computer Science \\ University of Minnesota}
+\date{June 11, 2013}
+
+\begin{document}
+
+%%v-------------------------------------------------------------------v%
+%
+%
+\begin{frame}
+  \titlepage
+\end{frame}
+%%
+%%^-------------------------------------------------------------------^
+
+%%v-------------------------------------------------------------------v%
+%
+%
+\begin{frame}{Outline}
+  \tableofcontents[section,subsection]
+\end{frame}
+%%
+%%^-------------------------------------------------------------------^
+\section{Motivation}
+\subsection{}
+%%v-------------------------------------------------------------------v%
+%
+%%
+\begin{frame}{Motivation}
+   \begin{figure}
+      \includegraphics[scale=0.5]{bai.png}
+   \end{figure}
+  {\scriptsize X.~Bai and G.~Sapiro, ``A geodesic framework for fast interactive image and
+  video segmentation and matting,'' in \emph{Proc. of the 11th IEEE
+  International Conference on Computer Vision}, October 2007, pp. 1--8.}
+  \begin{itemize}
+    \item User scribbles denote foreground/background
+    \item Automatically separates objects of interest from everything else(background/noise)
+  \end{itemize}
+\end{frame}
+%%
+\begin{frame}{Motivation}
+\begin{columns}[c]
+\column{3.0in}
+\begin{itemize}
+    \item Segmentation is handy but limited if it relies on color
+     \item Many sensors have only one channel
+     \begin{itemize}
+      \item Medical images(MRI, X-ray)
+      \item Satellite images
+      \item Low-cost cameras
+     \end{itemize}
+  \end{itemize}
+\column{36mm}
+\begin{center}
+  \includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{teeth.png}\\
+  \includegraphics[scale=0.03]{san_ysidro_nm.jpg}
+\end{center}
+\end{columns}
+\end{frame}
+%%
+%%^-------------------------------------------------------------------^
+\section{Background}
+\subsection{}
+%%v-------------------------------------------------------------------v%
+%
+\begin{frame}{Background}
+Interactive Segmentation
+   \begin{itemize}
+     \item Interactive Graph Cuts -- Boykov, Jolly; 2001
+     \item Iterative Figure-Ground Discrimination -- Zhao, Davis; 2004
+     \item Random Walks-- Grady; 2006
+     \item Grabcut
+     \item Bai, Sapiro
+   \end{itemize}
+\end{frame}
+%
+\begin{frame}{Background}
+   Texture Segmentation
+   \begin{itemize}
+     \item Jain, Farrokhnia
+     \item Carevic
+   \end{itemize}
+\end{frame}
+%
+%%
+%%^-------------------------------------------------------------------^
+\section{Methods}
+\subsection{}
+\begin{frame}{Methods}
+General order of operation
+      \includegraphics[width=34mm]{../knut_color_input.jpg}
+      \includegraphics[width=40mm]{../knut_divf.png}
+      \includegraphics[width=34mm]{../knut_color_final.jpg}
+   \begin{itemize}
+   \item Create marks on the image to distinguish foreground/background
+   \item Gather underlying image statistics from those samples(texture,kernel density estimation)
+   \item Separate foreground from background(geodesic distance)
+   \end{itemize}
+\end{frame}
+
+%%
+%%^-------------------------------------------------------------------^
+\subsection{Geodesic Distance}
+%%v-------------------------------------------------------------------v%
+%
+\begin{frame}{Geodesic Distance}
+Geodesics are shortest lines that connect two points on a curved surface. The likelihood is
+\begin{equation}L_{x}=\frac{P_{x}}{P_{f} + P_{b}}\end{equation}
+which is the probability that a pixel is a member of the foreground of background. The gradiant of the likelihood then defines the surface over which we attempt to move from point A(user scribbles) to point B(all other points).
+\end{frame}
+%
+\begin{frame}{Geodesic Distance}
+\begin{itemize}
+\item Geodesic distances were calculated using Fast Forward Marching.
+\item Can be calculated in a linear time fashion, visiting every pixel only once each for foreground and background
+\item Each pixel's membership is determined by the lesser of the two geodesic distances
+\end{itemize}
+\end{frame}
+%
+%%^-------------------------------------------------------------------^
+\subsection{Texture}
+%%v-------------------------------------------------------------------v%
+%
+\begin{frame}{Texture}
+Texture is a difficult concept to define.
+   \begin{quote}
+      The visual or tactile surface characteristics and appearance of something.\\
+      \hfill{{\scriptsize \emph{Merriam-Webster Dictionary}}}
+   \end{quote}
+   \begin{quote}
+      Image texture is a set of metrics calculated in image processing designed to quantify the perceived texture of an image.\\
+      \hfill{{\scriptsize Linda G. Shapiro and George C. Stockman, \emph{Computer Vision}, Upper Saddle River: Prentice–Hall, 2001}}
+   \end{quote}
+\end{frame}
+%
+\begin{frame}{Texture}
+Some easily computed and commonly used metrics
+   \begin{itemize}
+      \item edges or corners(strength,edginess)
+      \item correlation
+      \item image intensity
+      \item Fourier response
+   \end{itemize}
+\end{frame}
+%
+\begin{frame}{Texture}
+Gabor Filters
+\begin{itemize}
+   \item 2D filter generated by Gaussian kernel modulated by sinusoid
+   \item biologically inspired - similar responses to some visual cortex cells
+   \item have been used for texture analysis and segmentation
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Texture}
+Gabor Filter Equation
+$g(x,y,\lambda,\theta,\psi,\sigma,\gamma) = \exp\left(-\frac{x^{\prime 2}+\gamma^2 y^{\prime 2}}{2 \sigma^2}\right)\cos \left(2 \pi\frac{x^\prime}{\lambda} + \psi\right)$
+\begin{itemize}
+   \item $\lambda$: wavelength of the sinusoid
+   \item $\theta$: orientation from the normal
+   \item $\sigma$: Gaussian window
+   \item $\psi$: phase offset
+   \item $\gamma$: ellipticity
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Texture}
+\begin{itemize}
+\item Filters were created by varying orientation($\theta$), frequency($\lambda$), and envelope size($\sigma$).\\
+\item A $\frac{\pi}{2}$ offset was chosen to give oriented edge detection.\\
+\item Eight values each were selected for orientation, frequency, and Gaussian window, giving a bank of 512 different filters.\\
+\item Each filter was normalized to ensure similar responses.\\
+\item At each pixel, the filter values for the maximum response were substituted in for the image's {\it RGB} values.
+\item These pseudocolor images were then used as inputs to segmentation
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Texture}
+\begin{center}
+\LARGE{Selected Gabor patches}
+   \begin{figure}
+      \includegraphics[scale=0.5]{array.png}
+   \end{figure}
+\end{center}
+\end{frame}
+
+\subsection{Kernel Density Estimation}
+%%v-------------------------------------------------------------------v%
+%
+\begin{frame}{Kernel Density Estimation}
+\begin{equation}\label{kde}p(x)=\frac{1}{N}\sum_{i=1}^{N}{K_{\sigma}(x-x_i)}\end{equation}
+\begin{itemize}
+   \item $K_\sigma$ -- the kernel, or windowing function
+   \item $\sigma$ -- bandwidth
+   \item $N$ -- number of samples
+   \end{itemize}
+\end{frame}
+%
+\begin{frame}{Kernel Density Estimation}
+Kernels must be:
+\begin{itemize}
+   \item of unit area
+   \item symmetric about 0
+   \end{itemize}
+These guarantee that a kernel will converge to the true PDF given enough samples. Typically a gaussian is used although other kernels are available(uniform, triangular, Epanechnikov).
+\end{frame}
+%
+\begin{frame}{Kernel Density Estimation}
+\begin{center}
+      \includegraphics[height=40mm]{../texture3_color_input.jpg} \\
+      \includegraphics[height=35mm]{sigma.png}
+      \includegraphics[height=35mm]{theta.png}
+      \includegraphics[height=35mm]{lambda.png}
+   \end{center}
+\end{frame}
+%
+\begin{frame}{Kernel Density Estimation}
+   \begin{center}
+      \includegraphics[width=120mm]{histogram.png}
+   \end{center}
+\end{frame}
+%
+%%
+%%^-------------------------------------------------------------------^
+\section{Results}
+\subsection{}
+%%v-------------------------------------------------------------------v%
+%
+\begin{frame}{Results}
+Start with a simple case and verify color segmentation works
+   \begin{center}
+      \includegraphics[height=36mm]{../knut_color_input.jpg}
+      \hfill \hfill
+      \includegraphics[height=36mm]{../knut_color_final.jpg}
+   \end{center}
+\end{frame}
+
+\begin{frame}{Results}
+\LARGE{Input Images}
+   \begin{figure}
+      \includegraphics[height=36mm]{../../data/texture1.jpg}
+      \includegraphics[height=36mm]{../../data/texture2.jpg}
+      \includegraphics[height=36mm]{../../data/texture3.jpg}
+   \end{figure}
+\end{frame}
+%
+\begin{frame}{Results}
+\LARGE{Input Images -- Marked Up}
+   \begin{figure}
+      \includegraphics[height=36mm]{../texture1_color_input.jpg}
+      \includegraphics[height=36mm]{../texture2_color_input.jpg}
+      \includegraphics[height=36mm]{../texture3_color_input.jpg}
+   \end{figure}
+\end{frame}
+%
+\begin{frame}{Results}
+\LARGE{Pseudocolor Texture}
+   \begin{figure}
+      \includegraphics[height=36mm]{../texture1_gabor_pseudocolor.jpg}
+      \includegraphics[height=36mm]{../texture2_gabor_pseudocolor.jpg}
+      \includegraphics[height=36mm]{../texture3_gabor_pseudocolor.jpg}
+   \end{figure}
+\end{frame}
+%
+\begin{frame}{Results}
+\LARGE{Color Segmentation Results}
+   \begin{figure}
+      \includegraphics[height=36mm]{../texture1_color_final.jpg}
+      \includegraphics[height=36mm]{../texture2_color_final.jpg}
+      \includegraphics[height=36mm]{../texture3_color_final.jpg}
+   \end{figure}
+\end{frame}
+%
+\begin{frame}{Results}
+\LARGE{Texture Segmentation Results}
+   \begin{figure}
+      \includegraphics[height=36mm]{../texture1_gabor_final.jpg}
+      \includegraphics[height=36mm]{../texture2_gabor_final.jpg}
+      \includegraphics[height=36mm]{../texture3_gabor_final.jpg}
+   \end{figure}
+\end{frame}%
+%
+\begin{frame}{Results}
+\LARGE{Input}
+   \begin{center}
+      \includegraphics[scale=0.5]{../stripes_color_input.jpg}
+   \end{center}
+\end{frame}%
+%
+\begin{frame}{Results}
+\LARGE{Color Segmentation Results}
+   \begin{center}
+      \includegraphics[scale=0.5]{stripes_color_final.jpg}
+   \end{center}
+\end{frame}%
+%
+\begin{frame}{Results}
+\LARGE{Texture Pseudocolor}
+   \begin{center}
+      \includegraphics[scale=0.5]{../stripes_gabor_pseudocolor.jpg}
+   \end{center}
+\end{frame}%
+%
+\begin{frame}{Results}
+\LARGE{Texture Segmentation Results}
+   \begin{center}
+      \includegraphics[scale=0.5]{../stripes_gabor_final.jpg}
+   \end{center}
+\end{frame}%
+%%
+%%^-------------------------------------------------------------------^
+\section{Conclusion}
+\subsection{}
+%%v-------------------------------------------------------------------v%
+%
+\begin{frame}{Conclusion}
+\begin{itemize}
+\item In certain cases, segmentation using texture provides much better results than using color
+\item Using texture as a color proxy results in a powerful new way to handle segmentation of monochrome images
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Thank You}
+   \begin{center}
+      \huge{Questions?}
+   \end{center}
+\end{frame}
+%
+%%
+%%^-------------------------------------------------------------------^
+\end{document}
