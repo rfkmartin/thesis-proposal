@@ -68,7 +68,7 @@ Understanding human activity in a video sequence has many real-world application
 Once we have segmented people in several frames, we can classify the represented activity. Using simple velocity, as in \cite{bodor2003}, can distinguish between running and walking. By decomposing the time sequence of shapes into a vector space, we can investigate such techniques such as PCA \cite{masoud2003} or NN \cite{blank2005}. A more detailed summary of recent methods can be found in \cite{poppe2010} and \cite{aggarwal2011}.
 
 \subsection{Subtle Human Motion}
-We define \textbf{subtle motions} to be synonymous with gestures. \textbf{Gestures} are elementary movements of a body part as opposed to \textbf{actions}, which are comprised of one or more gestures. Whereas the previous section discussed activities which typically involved an entire body, here we focus on a single body part, such as a hand, the head, or a facial feature such as the lips or eyes.
+We define \textbf{subtle motions} to be synonymous with gestures. \textbf{Gestures} are elementary movements of a body part, such as a hand, the head, or a facial feature such as the lips or eyes, and are used to interact with the environment or communicate some information. Several different modes have been used to recognize gestures including instrumented clothing, body-mounted accelerometers, marker based visual tracking, and cameras \cite{mitra2007}. We disinguish gestures from \textbf{actions}, which are comprised of one or more gestures, which was discussed in the previous section.
 
 Gestures have many applications beyond activity recognition. They play a large part in human-computer interaction. One of the first applications \cite{bradski98} applied the CAMSHIFT algorithm to recognize and track head movements to control a flight simulator. The simplicity of the algorithm limited its application but proved the field worthy of further research. One drawback  was that it \cite{bradski98} only searched for a head-shaped, skin-colored object. Improvements have been made to look explicitly for faces and there is a body of active research into face recognition, as in \cite{cech2014} and \cite{viola2004}. Hand detection was attempted in \cite{kolsch2004} as an extension of Viola's face detection although here attempted for static images only. More recently, color and motion were used to track hands with an emphasis on running in real-time on low-end hardware \cite{liu2017}. For limb detection and their orientation to the torso, \cite{cao2016} has created a system called OpenPose which can detect accurate human poses even in heavily populated scenes.
 
@@ -77,9 +77,9 @@ Individual parts of the face have been used to recognize gestures as well. Eyes 
 Sivalingam \cite{sivalingam2012} demonstrated a multi-camera system that could be used to detect interesting large-motor behaviors in children. A single-camera system was used in \cite{fasching2016} to observe and classify hand-washing behaviors and attempted to classify both the different steps in a routine and the interactions with specific objects in the environment. Using smile and gaze detection, \cite{rehg2013} examined the feasibility of multi-modal sensing to determine object engagement in the scene. Using a Microsoft Kinect, \cite{burba2012} used depth to measure respiratory rate and leg fidgeting.
 
 \subsection{Psychopathology}
-Mental illnesses are typcially diagnosed through observable symptoms or behaviors. Observations are one part of an multi-part assesment, which sometimes include interviews and self-reports. Because observations can be made anywhere, they can be made to be far less intrusive than typical in-clinic evaluations. Once observations are made using consistent and quantitative standards, they can become a valuable source of diagnostic information. Observable risk-markers have been compiled for mental disorders such as depression, obsessive-compulsive disorder, anxiety, and Tourette's syndrome, among others.
+Mental illnesses are typcially diagnosed through observable symptoms or behaviors. Observations are one part of an multi-part assesment, which sometimes include interviews and self-reports. Because observations can be made anywhere, they can be made to be far less intrusive than typical in-clinic evaluations. Once observations are made using consistent and quantitative standards, they can become a valuable source of diagnostic information \cite{hashemi2012}. Observable risk-markers have been compiled for mental disorders such as depression, obsessive-compulsive disorder, anxiety, and Tourette's syndrome, among others.
 
-For obsessive-compulsive disorder(OCD), it is typically measured through the Children's Yale-Brown Obsessive Compulsive Scale (CY-BOCS) checklist. The disorder manifests itself in repeated, persistent and unwanted thoughts, urges or images which are overly, even disablingly intrusive and cause the sufferer distress or anxiety. Some of these urges are observable compulsions, such as ordering or arranging objects in specific ways \cite{radomsky2004}. Another classic manifestation of OCD is excessive and meticulous handwashing. As non-obsessive, non-compulsive forms of these behaviors exist in the general population, clinicians also need to differentiate among these cases.  Results in \cite{zor2011} found that  video analysis can be used to discriminate among compulsions. Other research \cite{bernstein2017} has found that video is a valid and reliable tool to assist in  quantifying risk-markers.
+For obsessive-compulsive disorder(OCD), it is typically measured through the Children's Yale-Brown Obsessive Compulsive Scale (CY-BOCS) checklist. The disorder manifests itself in repeated, persistent and unwanted thoughts, urges or images which are overly, even disablingly intrusive and cause the sufferer distress or anxiety. Some of these urges are observable compulsions, such as ordering or arranging objects in specific ways \cite{radomsky2004}. Other prevelant manifestations of OCD are obsessions with cleanliness, compulsive checking, and hoarding \cite{abramowitz2003}. As non-obsessive, non-compulsive forms of these behaviors exist in the general population, clinicians also need to differentiate among these cases.  Results in \cite{zor2011} found that  video analysis can be used to discriminate among compulsions. Other research \cite{bernstein2017} has found that video is a valid and reliable tool to assist in  quantifying risk-markers.
 
 Depression is another common mental disorder which has observable behavior manifestations. Scherer \cite{scherer2014} has found that depressed individuals, as well as those suffering from post-traumatic stress(PTSD), have quantifiable gaze behaviors. In addition to gaze, facial expressions - specifically smiles - were also found to be a good metric for discerning mental health.
 
@@ -90,18 +90,18 @@ It should be acknowledged that many of the behaviors discussed above are subject
 \section{Initial Work}
 In this section we will describe initial efforts to observe and analyze subtle motion of the hands and face and discuss how these attributes may be used for disorder assessment - along with their inherent difficulties and shortcomings. Gestures were chosen for their simplicity. Later thesis work will explore more complex actions and scenes.
 \subsection{Hand Gestures}
-One of the common behaviors of children suffering from obsessive-compulsive disorder is the compulsion to arrange things symmetrically. Sufferers feel the need to organize a scene "just so" and will spend inordinate amounts of time on this task. Co-occurring with this condition is a superstition to avoid certains shapes, colors, or numbers. We will attempt to create a system to capture an ordering task and create metrics that might illuminate these behaviors.
+One of the common behaviors of children suffering from obsessive-compulsive disorder engage in ordering or arranging behaviors and a preoccupation with symmetry \cite{radomsky2004}. Sufferers feel the need to organize a scene "just so" and will spend inordinate amounts of time on this task. A common secondary compulsion that appears with this condition is a superstition to avoid certains shapes, colors, or numbers. We will create an ordering task that will attempt to induce these behaviors as well as create metrics to distinguish between normal and compulsive behaviors.
 
 We set up a top-down scene with a simple background and a limited number of objects. The subjects are then asked to align the objects in some shape (straight line or  circle) as marked on the surface and the task is recorded. Objects are chosen for their simple shapes and colors. Our setup is shown in figure \ref{setup}. We have chosen a flat-white background to minimize segmentation and tracking impediments so as to obtain data pertinent to our goal of developing the behavioral metrics.
 
 \subsubsection{Engagement}
 An \textbf{engagement} is any time it appears that there is an interaction between the subject's hands and an object. We define two types of engagements:
 \begin{itemize}
-\item Type I: any time an object is at least occluded by a hand or an object is held by a hand
-\item Type II: any type I engagement that leads to a change in position of the object
+\item Type I - touching: any time an object is at least occluded by a hand or an object is held by a hand. This will correspond to a \textbf{checking} behavior.
+\item Type II - moving: any type I engagement that leads to a change in position of the object. This will highlight a potential \textbf{ordering} or \textbf{object preference} behavior.
 \end{itemize}
 
-We differentiate the types of interactions in the thought that subjects who exhibit some type of compulsion will engage with objects for longer durations and perhaps engage with specific objects longer than other objects. In addition to classifying, we collect a few other metrics:
+We differentiate the types of interactions in the thought that subjects who exhibit some type of compulsion will engage with objects for longer durations and perhaps engage with specific objects longer than other objects. In addition to classifying, we collect a few other metrics to measure additional object preference behaviors:
 \begin{itemize}
 \item Total length of engagement(type I and II)
 \item Length of engagement per object(both type I and II)
@@ -159,7 +159,6 @@ Normal blinking is typically an involuntary action that lubricates the eyeballs 
 
 We can see in the graphs in figure \ref{ticgraph} that the blink duration during a tic is longer. This, unfortunately, is not always the case. In the graphs we have also tracked the distance between the eyebrows and the pupil and in this particular case we can see the distance decreases more severely during a tic.
 
-\begin{figure}%
 \begin{figure}%
     \centering
     \subfloat[Subject blinking normally]{{\includegraphics[width=\textwidth]{CC83.jpg} }}%
@@ -256,10 +255,10 @@ In the context of work-flow optimization, our metrics will provide insight into 
 \section{Timeline}
 A proposed timeline for the project, with a finishing date of Fall 2020, is the following:
 \begin{itemize}
-  \item August 2018 - March 2019: continue to gather data from a larger population
-  \item April 2019 - October 2019: process videos and refine the algorithms
-  \item November 2019 - May 2020: apply machine learning for behavior discrimination
-  \item June 2020 - December  2020: final results and write final thesis
+  \item August 2018 - March 2019: Continue to gather data from a larger population of subjects. Create framework to batch process videos. Write foundational software for metrics and camera calibration.
+  \item April 2019 - October 2019: Process videos and refine the algorithms for both tracking and facial feature analysis
+  \item November 2019 - May 2020: Investigate and apply machine learning for behavior and tic discrimination
+  \item June 2020 - December  2020: Review results and write final thesis
 \end{itemize}
 
 \pagebreak
