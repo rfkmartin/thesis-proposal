@@ -63,7 +63,7 @@ Single frames using some form of object detection typically requires both a back
 Once an object of interest is found in an image, it is necessary to find it in successive frames using its object representation. Even simple object interactions, where one object partially occludes another or the object changes in appearance or shape, can cause problems. Tracking gets even more difficult when one or more items disappear for several frames, although some recent papers are addressing this problem. Typically, they are handling occlusion by making certain assumptions, such as objects reappearing near to where they disappeared \cite{papadourakis2010}, or very simple smooth trajectories \cite{iraei2015}, or object permanence \cite{huang2005}.
 
 \subsection{Activity Recognition}
-Understanding human activity in a video sequence has many real-world applications. Being able to automatically monitor and classify human motion is of great interest to not only the medical community but also security surveillance and sports analysis. Successful research has focused on primitive activities like walking or running but more complex activities remain a challenge. Yet understanding which complex activity a subject is performing is a precursor to being able to identify possible whole-body risk markers.
+Understanding human activity in a video sequence has many real-world applications. Being able to automatically monitor and classify human motion is of great interest to not only the medical community but also security surveillance and sports analysis. Successful research has focused on primitive activities like walking or running but more complex activities(e.g. a subject walks into a room, sits down, and interacts with an object) remain a challenge. Yet understanding which complex activity a subject is performing is a precursor to being able to identify possible whole-body risk markers.
 
 Once we have segmented people in several frames, we can classify the represented activity. Using simple velocity, as in \cite{bodor2003}, can distinguish between running and walking. By decomposing the time sequence of shapes into a vector space, we can investigate such techniques such as PCA \cite{masoud2003} or NN \cite{blank2005}. A more detailed summary of recent methods can be found in \cite{poppe2010} and \cite{aggarwal2011}.
 
@@ -72,7 +72,7 @@ We define \textbf{subtle motions} to be synonymous with gestures. \textbf{Gestur
 
 Gestures have many applications beyond activity recognition. They play a large part in human-computer interaction. One of the first applications \cite{bradski98} applied the CAMSHIFT algorithm to recognize and track head movements to control a flight simulator. The simplicity of the algorithm limited its application but proved the field worthy of further research. One drawback  was that it \cite{bradski98} only searched for a head-shaped, skin-colored object. Improvements have been made to look explicitly for faces and there is a body of active research into face recognition, as in \cite{cech2014} and \cite{viola2004}. Hand detection was attempted in \cite{kolsch2004} as an extension of Viola's face detection although here attempted for static images only. More recently, color and motion were used to track hands with an emphasis on running in real-time on low-end hardware \cite{liu2017}. For limb detection and their orientation to the torso, \cite{cao2016} has created a system called OpenPose which can detect accurate human poses even in heavily populated scenes.
 
-Individual parts of the face have been used to recognize gestures as well. Eyes have been used to detect blinks and gaze direction for driver awareness and again for human-computer interaction. Chau \cite{chau2005} explicitly found the eyes using blinks and then trained the system to distinguish between voluntary and involuntary blinks. In \cite{soukupova2016}, facial landmarks were used to detect the eyes and in real-time determine blinks using an eye-aspect ratio. Grauman et al. \cite{grauman2003} used temporal differencing to locate the eyes and determine blink rate and duration. Additionally, they used the location of the eyes as a prior probability to find the eyebrows, which were then tracked and used as an additional system input. Using new combinations of facial features, \cite{nguyen2017} was able to successfully classify emotions in real-time.
+Individual parts of the face have been used to recognize gestures as well. Eyes have been used to detect blinks and gaze direction for driver awareness and again for human-computer interaction. Chau \cite{chau2005} explicitly found the eyes using blinks and then trained the system to distinguish between voluntary and involuntary blinks using simple blink frequency and duration. In \cite{soukupova2016}, facial landmarks were used to detect the eyes and in real-time determine blinks using an eye-aspect ratio. Grauman et al. \cite{grauman2003} used temporal differencing to locate the eyes and determine blink rate and duration. Additionally, they used the location of the eyes as a prior probability to find the eyebrows, which were then tracked and used as an additional system input. Using new combinations of facial features, \cite{nguyen2017} was able to successfully classify emotions in real-time.
 
 Sivalingam \cite{sivalingam2012} demonstrated a multi-camera system that could be used to detect interesting large-motor behaviors in children. A single-camera system was used in \cite{fasching2016} to observe and classify hand-washing behaviors and attempted to classify both the different steps in a routine and the interactions with specific objects in the environment. Using smile and gaze detection, \cite{rehg2013} examined the feasibility of multi-modal sensing to determine object engagement in the scene. Using a Microsoft Kinect, \cite{burba2012} used depth to measure respiratory rate and leg fidgeting.
 
@@ -90,7 +90,7 @@ It should be acknowledged that many of the behaviors discussed above are subject
 \section{Initial Work}
 In this section we will describe initial efforts to observe and analyze subtle motion of the hands and face and discuss how these attributes may be used for disorder assessment - along with their inherent difficulties and shortcomings. Gestures were chosen for their simplicity. Later thesis work will explore more complex actions and scenes.
 \subsection{Hand Gestures}
-One of the common behaviors of children suffering from obsessive-compulsive disorder engage in ordering or arranging behaviors and a preoccupation with symmetry \cite{radomsky2004}. Sufferers feel the need to organize a scene "just so" and will spend inordinate amounts of time on this task. A common secondary compulsion that appears with this condition is a superstition to avoid certains shapes, colors, or numbers. We will create an ordering task that will attempt to induce these behaviors as well as create metrics to distinguish between normal and compulsive behaviors.
+One of the common behaviors of children suffering from obsessive-compulsive disorder engage in ordering or arranging behaviors and a preoccupation with symmetry \cite{radomsky2004}. Sufferers feel the need to organize a scene "just so" and will spend inordinate amounts of time on this task. Secondary compulsions that appear with this condition is a preference or aversion certains shapes, colors, or numbers. We will create an ordering task that will attempt to induce these behaviors as well as create metrics to distinguish between normal and compulsive behaviors.
 
 We set up a top-down scene with a simple background and a limited number of objects. The subjects are then asked to align the objects in some shape (straight line or  circle) as marked on the surface and the task is recorded. Objects are chosen for their simple shapes and colors. Our setup is shown in figure \ref{setup}. We have chosen a flat-white background to minimize segmentation and tracking impediments so as to obtain data pertinent to our goal of developing the behavioral metrics.
 
@@ -199,6 +199,7 @@ Face feature tracking is noisy and small invidual variations in even one facial 
     \label{gazegraph}%
 \end{figure}
 
+
 \section{Proposed Work}
 \subsection{Increase the data set of tic videos}
 What motivated us to start this thesis was the future applicability of the technology. Being able to quantify and differentiate tic behaviors has great potential for everyday use for people suffering from TS. Not only might clinicians and researchers make fuller use in less time of video data, but patients could get immediate feedback on any tic suppression exercises.
@@ -218,9 +219,14 @@ Another primary goal of this work is to produce a system which can be used in no
 Our initial tests in the arranging task consisted of a single top-down view. This was done as it provided the easiest initial setup for tracking. Additionally, the objects used for arranging were solid color objects on a white background. As we progress in our testing, we will add more complexity in this order.
 \begin{itemize}
 	\item{Multi-colored objects or objects of similar color -- we will try to make a robust tracker that can handle objects that have more varied color profiles. This wrinkle will test the robustness of tracking under occlusion.}
-	\item{Varied backgrounds -- Not everyone will have access to a plain white table surface. After our tracker can handle differently-colored objects, we will alter the background to (a) a darker, colored background and (b) a checkered tablecloth pattern.}
+	\item{Busy backgrounds -- Studies have shown that people exhibiting OCD tendencies tend to have a more diffcult time with an arranging task when there is a patterned working surface. After our tracker can handle a wider array of objects, we will introduce a a non-uniform background, most likely something similar to a checkered tablecloth pattern.}
 	\item{Other viewpoints -- A top-down viewpoint reduces the dimensionality of the scene from 3D to 2D. We will attempt to analyze the arranging task from a 3/4 viewpoint to see if can handle occlusions from a different angle as well as motion that is not necessarily planar. Special attention will be paid to camera calibration in this section to make sure we can accurately detect circles from an arbitrary view as well as detemine object spacing in the final arrangement.}
 \end{itemize}
+\subsection{Additional facial features}
+Standard computer vision libraries typically include some implementation of facial feature detection. Some, such as dlib, find up to 68 distinct points on a face as shown in figure \ref{ftrpts}. Data will be captured for a full set of feature points and used for later analysis. Blinking tics tend to involve more facial muscle movement than involuntary blinking and will likely result in quantifiable differences in those other facial features.
+
+Additionally, we will attempt to capture the movement of the iris as eye rolling and exaggerated eye opening are common tics associated with TS. If sufficient resolution allows, the location of the iris will be another data point used for further analysis.
+
 \subsection{Hidden Markov models and Recurrent Neural Networks}
 We have identified several facial features to  describe tic-like behavior but are so far analyzing them individually. It is more likely that these features are related and perhaps even weakly correlated. It would make sense to investigate them as a vector of features instead.
 
@@ -229,10 +235,16 @@ Hidden Markov models(HMM) and recurrent neural networks(RNN) have been used for 
 Both methods are trained using a ground-truthed data set. In order to train either of these methods, we will need a larger selection of videos displaying tic and non-tic behavior.
 
 \subsection{Dyadic interactions}
-Certain behaviors may only manifest themselves in the presence of others or while doing cooperative activities. Some studies have shown a greater tendency toward hoarding or object preference during dyadic interactions. The metrics was have proposed for a single subject can be extended to multiple subjects. One could see a comparison of the solo and dyadid arranging tasks might highlight different behaviors.
+Certain behaviors may only manifest themselves in the presence of others or while doing cooperative activities. Some studies have shown a greater tendency toward stockpiling certain items or object preference during dyadic interactions. The metrics we have proposed for a single subject can be extended to multiple subjects. One could see a comparison of the solo and dyadic arranging tasks might highlight different behaviors.
 
 Tracking two subjects adds another layer to complexity to an already difficult problem. We now are required to know which user is manipulating an object. Not only do we need to track objects, we need to track arms and hands. Because of this it will be possible for occlusions to cause multiple interaction events. Despite these hurdles, this is an interesting problem worth investigating because of its application to other fields. Being able to distinguish object/subject interaction in a busy scene is very applicable to studies of crowd surveillance.
 
+\begin{figure}%
+    \centering
+    \resizebox{!}{90mm}{\includegraphics[width=\textwidth]{ftrpts.png}}
+    \caption{Location of detected feature points using dlib.}
+    \label{ftrpts}%
+\end{figure}
 \begin{figure}%
     \centering
     \resizebox{!}{!}{\includegraphics[width=\textwidth]{dyadic.jpg}}
